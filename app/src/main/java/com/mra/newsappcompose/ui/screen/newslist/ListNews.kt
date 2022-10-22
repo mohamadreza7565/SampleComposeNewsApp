@@ -1,9 +1,7 @@
-package com.mra.newsappcompose.ui.screen
+package com.mra.newsappcompose.ui.screen.newslist
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -30,6 +28,7 @@ import androidx.navigation.compose.rememberNavController
 import com.mra.newsappcompose.R
 import com.mra.newsappcompose.ui.data.models.NewsModel
 import com.mra.newsappcompose.ui.global.objects.MockData
+import com.mra.newsappcompose.ui.screen.newsdetails.openNewsDetails
 
 /**
  * Create by Mohammadreza Allahgholi

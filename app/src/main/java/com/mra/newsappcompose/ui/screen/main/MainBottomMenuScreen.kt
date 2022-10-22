@@ -1,4 +1,4 @@
-package com.mra.newsappcompose.ui.global
+package com.mra.newsappcompose.ui.screen.main
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Abc
@@ -11,25 +11,25 @@ import com.mra.newsappcompose.ui.data.enums.Screens
  * Create by Mohammadreza Allahgholi
  *  Site: https://seniorandroid.ir
  */
-sealed class BottomMenuScreen(
+sealed class MainBottomMenuScreen(
     val route:String,
     val  icon:ImageVector,
     val title:String
 ){
 
-    object NewsList : BottomMenuScreen(
+    object NewsList : MainBottomMenuScreen(
         route=Screens.LIST_NEWS.name,
         icon = Icons.Outlined.Home,
         title = "News"
     )
 
-    object Catrgories : BottomMenuScreen(
+    object Catrgories : MainBottomMenuScreen(
         route= Screens.CATEGORIES.name,
         icon = Icons.Outlined.Category,
         title = "Catrgories"
     )
 
-    object Sources : BottomMenuScreen(
+    object Sources : MainBottomMenuScreen(
         route= Screens.SOURCES.name,
         icon = Icons.Outlined.Abc,
         title = "Sources"

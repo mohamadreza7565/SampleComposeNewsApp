@@ -1,4 +1,4 @@
-package com.mra.newsappcompose.ui.screen
+package com.mra.newsappcompose.ui.screen.newsdetails
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.*

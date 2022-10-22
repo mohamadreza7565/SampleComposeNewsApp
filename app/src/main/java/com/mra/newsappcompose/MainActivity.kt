@@ -10,7 +10,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.mra.newsappcompose.ui.NewsApp
+import com.mra.newsappcompose.ui.screen.main.NewsApp
 import com.mra.newsappcompose.ui.theme.NewsAppComposeTheme
 
 class MainActivity : ComponentActivity() {
