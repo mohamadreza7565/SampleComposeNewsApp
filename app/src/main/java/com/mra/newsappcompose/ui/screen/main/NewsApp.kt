@@ -46,16 +46,18 @@ fun MainScreen(navController: NavHostController, scrollState: ScrollState) {
     val currentRoute =
         navBackStackEntry?.destination?.route ?: MainBottomMenuScreen.NewsList.route
 
-    val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
-    bottomBarState.value =  MainBottomBarData.menuItems.find { it.route == currentRoute }!=null
+    val bottomBarState = MainBottomBarData.menuItems.find { it.route == currentRoute } != null
 
     Scaffold(
         bottomBar = {
-                BottomMenu(navController = navController, bottomBarState = bottomBarState)
+            BottomMenu(
+                navController = navController,
+                bottomBarState = bottomBarState
+            )
         },
     ) { innerPadding ->
         Navigation(
-            modifier= Modifier.padding(innerPadding),
+            modifier = Modifier.padding(innerPadding),
             navController = navController,
             scrollState = scrollState
         )
@@ -63,7 +65,7 @@ fun MainScreen(navController: NavHostController, scrollState: ScrollState) {
 }
 
 @Composable
-fun Navigation(modifier:Modifier,navController: NavHostController, scrollState: ScrollState) {
+fun Navigation(modifier: Modifier, navController: NavHostController, scrollState: ScrollState) {
     NavHost(
         modifier = modifier,
         navController = navController,

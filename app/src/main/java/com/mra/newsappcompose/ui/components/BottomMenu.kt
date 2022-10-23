@@ -28,7 +28,7 @@ import com.mra.newsappcompose.ui.global.objects.MainBottomBarData
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
-fun BottomMenu(navController: NavController, bottomBarState: MutableState<Boolean>) {
+fun BottomMenu(navController: NavController, bottomBarState: Boolean) {
 
     val enterTransition = remember {
         expandVertically(
@@ -52,7 +52,7 @@ fun BottomMenu(navController: NavController, bottomBarState: MutableState<Boolea
 
 
     AnimatedVisibility(
-        visible = bottomBarState.value,
+        visible = bottomBarState,
         enter = enterTransition,
         exit = exitTransition
     ) {
