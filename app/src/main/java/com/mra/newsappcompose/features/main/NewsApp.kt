@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.*
@@ -15,8 +17,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.google.gson.Gson
 import com.mra.newsappcompose.ui.components.BottomMenu
 import com.mra.newsappcompose.data.enums.Screens
+import com.mra.newsappcompose.data.models.ArticlesModel
+import com.mra.newsappcompose.data.models.ArticlesPage_UniqueUserNavType
 import com.mra.newsappcompose.global.objects.MainBottomBarData
 import com.mra.newsappcompose.global.objects.MockData
 import com.mra.newsappcompose.features.categories.Categories
@@ -66,25 +71,36 @@ fun MainScreen(navController: NavHostController, scrollState: ScrollState) {
 
 @Composable
 fun Navigation(modifier: Modifier, navController: NavHostController, scrollState: ScrollState) {
+
+    val lazyListState = rememberLazyListState()
+
     NavHost(
         modifier = modifier,
         navController = navController,
         startDestination = Screens.LIST_NEWS.name,
     ) {
 
-        bottomNavigation(navController)
+        bottomNavigation(
+            lazyListState,
+            navController
+        )
         composable(route = Screens.LIST_NEWS.name) {
-            ListNews(navController = navController)
+            ListNews(
+                lazyListState = lazyListState,
+                navController = navController
+            )
         }
 
         composable(
-            route = "${Screens.DETAILS_NEWS.name}/{newsId}",
-            arguments = listOf(navArgument("newsId") { type = NavType.IntType }),
+            route = "${Screens.DETAILS_NEWS.name}?item={item}",
+            arguments = mutableListOf(navArgument("item") { type = ArticlesPage_UniqueUserNavType }),
         ) { navBackStackEntry ->
-            val id = navBackStackEntry.arguments?.getInt("newsId")
+
+           val article = navBackStackEntry.arguments?.getParcelable<ArticlesModel>("item")!!
+
             DetailsScreen(
                 navController = navController,
-                newsData = MockData.getNews(id),
+                article = article,
                 scrollState = rememberScrollState()
             )
         }
@@ -93,9 +109,15 @@ fun Navigation(modifier: Modifier, navController: NavHostController, scrollState
 }
 
 
-fun NavGraphBuilder.bottomNavigation(navController: NavHostController) {
+fun NavGraphBuilder.bottomNavigation(
+    lazyListState: LazyListState,
+    navController: NavHostController
+) {
     composable(MainBottomMenuScreen.NewsList.route) {
-        ListNews(navController = navController)
+        ListNews(
+            navController = navController,
+            lazyListState = lazyListState
+        )
     }
     composable(MainBottomMenuScreen.Catrgories.route) {
         Categories(navController = navController)

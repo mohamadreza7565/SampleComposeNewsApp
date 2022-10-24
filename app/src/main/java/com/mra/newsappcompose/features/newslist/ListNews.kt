@@ -7,7 +7,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -52,9 +54,18 @@ import org.koin.androidx.compose.inject
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun ListNews(navController: NavController, mViewModel: NewsListViewModel = getViewModel(),mContext: Context = get()) {
+fun ListNews(
+    lazyListState : LazyListState,
+    navController: NavController,
+    mViewModel: NewsListViewModel = getViewModel(),
+    mContext: Context = get()
+) {
 
-    mViewModel.getTeslaNews()
+
+    LaunchedEffect(Unit) {
+        mViewModel.getTeslaNews()
+    }
+
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -80,11 +91,20 @@ fun ListNews(navController: NavController, mViewModel: NewsListViewModel = getVi
         },
     ) {
 
+
         LoadingScreen(mViewModel.newses == BaseApiDataState.Loading)
 
         when (mViewModel.newses) {
             is BaseApiDataState.Success -> {
-                NewsList(navController = navController)
+
+                (mViewModel.newses as BaseApiDataState.Success<BaseApiResult<MutableList<ArticlesModel>>>).data?.articles?.let {
+                    NewsList(
+                        lazyListState = lazyListState,
+                        data = it,
+                        navController = navController
+                    )
+                }
+
             }
 
             else -> {}
@@ -94,17 +114,22 @@ fun ListNews(navController: NavController, mViewModel: NewsListViewModel = getVi
 }
 
 @Composable
-private fun NewsList(navController: NavController) {
+private fun NewsList(lazyListState:LazyListState,data: MutableList<ArticlesModel>, navController: NavController) {
+
+
+
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        LazyColumn {
-            items(MockData.newsList) { item ->
+        LazyColumn(
+            state = lazyListState
+        ) {
+            items(data) { item ->
                 NewsItems(
                     item = item,
                     onItemClick = {
-                        navController.openNewsDetails(it.id)
+                        navController.openNewsDetails(it)
                     })
             }
         }
@@ -112,7 +137,7 @@ private fun NewsList(navController: NavController) {
 }
 
 @Composable
-fun NewsItems(item: NewsModel, onItemClick: (NewsModel) -> Unit) {
+fun NewsItems(item: ArticlesModel, onItemClick: (ArticlesModel) -> Unit) {
     Card(
         modifier = Modifier
             .height(200.dp)
@@ -142,7 +167,7 @@ fun NewsItems(item: NewsModel, onItemClick: (NewsModel) -> Unit) {
                         )
                     }
                 },
-            painter = painterResource(id = item.image),
+            painter = painterResource(id = R.drawable.news_1),
             contentDescription = "",
             contentScale = ContentScale.FillBounds,
         )
@@ -154,12 +179,12 @@ fun NewsItems(item: NewsModel, onItemClick: (NewsModel) -> Unit) {
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = item.publishedAt,
+                text = item.publishedAt?:"publishedAt",
                 color = Color.White,
                 fontWeight = FontWeight.SemiBold
             )
             Text(
-                text = item.title,
+                text = item.title?:"title",
                 color = Color.White,
                 fontWeight = FontWeight.SemiBold
             )
@@ -171,5 +196,5 @@ fun NewsItems(item: NewsModel, onItemClick: (NewsModel) -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun ListNewsPreview() {
-    ListNews(rememberNavController())
+    ListNews(rememberLazyListState(),rememberNavController())
 }

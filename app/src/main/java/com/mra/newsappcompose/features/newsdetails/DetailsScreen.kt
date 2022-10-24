@@ -1,6 +1,7 @@
 package com.mra.newsappcompose.features.newsdetails
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -25,10 +26,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.google.gson.Gson
 import com.mra.newsappcompose.data.enums.Screens
 import com.mra.newsappcompose.data.models.NewsModel
 import com.mra.newsappcompose.global.objects.MockData
 import com.mra.newsappcompose.R
+import com.mra.newsappcompose.data.models.ArticlesModel
 import com.mra.newsappcompose.global.objects.MockData.getDate
 import com.mra.newsappcompose.global.objects.MockData.getFullDate
 
@@ -37,13 +40,13 @@ import com.mra.newsappcompose.global.objects.MockData.getFullDate
  *  Site: https://seniorandroid.ir
  */
 
-fun NavController.openNewsDetails(id: Int) {
-    navigate("${Screens.DETAILS_NEWS.name}/$id")
+fun NavController.openNewsDetails(item: ArticlesModel) {
+    navigate("${Screens.DETAILS_NEWS.name}?item=${Uri.encode(Gson().toJson(item))}")
 }
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun DetailsScreen(navController: NavController, scrollState: ScrollState, newsData: NewsModel) {
+fun DetailsScreen(navController: NavController, scrollState: ScrollState, article: ArticlesModel) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -75,7 +78,7 @@ fun DetailsScreen(navController: NavController, scrollState: ScrollState, newsDa
 
                     Text(
                         modifier = Modifier.padding(start = 8.dp),
-                        text = newsData.title,
+                        text = article.title?:"title",
                         style = TextStyle(
                             color = Color.White,
                             fontSize = 20.sp,
@@ -90,7 +93,7 @@ fun DetailsScreen(navController: NavController, scrollState: ScrollState, newsDa
         content = {
             ColumDetails(
                 scrollState,
-                newsData
+                article
             )
         }
     )
@@ -99,7 +102,7 @@ fun DetailsScreen(navController: NavController, scrollState: ScrollState, newsDa
 @Composable
 private fun ColumDetails(
     scrollState: ScrollState,
-    newsData: NewsModel
+    article: ArticlesModel
 ) {
     Column(
         modifier = Modifier
@@ -112,7 +115,7 @@ private fun ColumDetails(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp),
-            painter = painterResource(id = newsData.image),
+            painter = painterResource(id = R.drawable.news_1),
             contentDescription = "",
             contentScale = ContentScale.FillBounds
         )
@@ -124,17 +127,17 @@ private fun ColumDetails(
         ) {
             InfoWithIcon(
                 Icons.Default.Edit,
-                newsData.author
+                article.author?:"author"
             )
             InfoWithIcon(
                 Icons.Default.DateRange,
-                newsData.publishedAt.getDate().getFullDate()
+                article.publishedAt?.getDate()?.getFullDate()?:"2022/24/10"
             )
         }
 
         Text(
             modifier = Modifier.padding(8.dp),
-            text = newsData.description
+            text = article.description?:"description"
         )
     }
 }
@@ -155,15 +158,4 @@ fun InfoWithIcon(icon: ImageVector, info: String) {
             style = TextStyle(fontSize = 12.sp)
         )
     }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun DetailsScreenPreview() {
-    DetailsScreen(
-        rememberNavController(),
-        rememberScrollState(),
-        MockData.newsList.first(),
-    )
 }
