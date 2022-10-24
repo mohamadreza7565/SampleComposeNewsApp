@@ -16,9 +16,9 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.colorResource
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.mra.newsappcompose.ui.screen.main.MainBottomMenuScreen
+import com.mra.newsappcompose.features.main.MainBottomMenuScreen
 import com.mra.newsappcompose.R
-import com.mra.newsappcompose.ui.global.objects.MainBottomBarData
+import com.mra.newsappcompose.global.objects.MainBottomBarData
 
 /**
  * Create by Mohammadreza Allahgholi
