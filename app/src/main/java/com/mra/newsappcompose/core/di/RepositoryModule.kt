@@ -1,6 +1,7 @@
 package com.mra.newsappcompose.core.di
 
 
+import com.mra.newsappcompose.data.datasource.NewsLocalDataSource
 import com.mra.newsappcompose.data.datasource.NewsRemoteDataSource
 import com.mra.newsappcompose.data.repository.NewsRepo
 import org.koin.android.ext.koin.androidContext
@@ -16,5 +17,13 @@ import org.koin.dsl.module
  *
  */
 val repositoryModule = module {
-    single { NewsRepo(NewsRemoteDataSource(androidContext(), mApiService = get())) }
+    single {
+        NewsRepo(
+            NewsRemoteDataSource(
+                androidContext(),
+                mApiService = get()
+            ),
+            NewsLocalDataSource(androidContext())
+        )
+    }
 }

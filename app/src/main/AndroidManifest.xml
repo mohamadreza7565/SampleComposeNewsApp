@@ -19,7 +19,7 @@
         android:theme="@style/Theme.NewsAppCompose"
         tools:targetApi="31">
         <activity
-            android:name=".features.MainActivity"
+            android:name=".ui.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.NewsAppCompose">
             <intent-filter>

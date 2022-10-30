@@ -1,4 +1,4 @@
-package com.mra.newsappcompose.features
+package com.mra.newsappcompose.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -9,7 +9,7 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.mra.newsappcompose.features.main.NewsApp
+import com.mra.newsappcompose.ui.main.NewsApp
 import com.mra.newsappcompose.ui.theme.NewsAppComposeTheme
 
 class MainActivity : ComponentActivity() {

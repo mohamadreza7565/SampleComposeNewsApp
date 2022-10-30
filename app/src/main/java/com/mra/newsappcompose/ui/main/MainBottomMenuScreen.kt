@@ -1,11 +1,11 @@
-package com.mra.newsappcompose.features.main
+package com.mra.newsappcompose.ui.main
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Abc
 import androidx.compose.material.icons.outlined.Category
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.mra.newsappcompose.data.enums.Screens
+import com.mra.newsappcompose.global.ScreenConst
 
 /**
  * Create by Mohammadreza Allahgholi
@@ -18,19 +18,19 @@ sealed class MainBottomMenuScreen(
 ){
 
     object NewsList : MainBottomMenuScreen(
-        route= Screens.LIST_NEWS.name,
+        route= ScreenConst.Home.NEWS_LIST,
         icon = Icons.Outlined.Home,
         title = "News"
     )
 
     object Catrgories : MainBottomMenuScreen(
-        route= Screens.CATEGORIES.name,
+        route= ScreenConst.Home.CATEGORY,
         icon = Icons.Outlined.Category,
         title = "Catrgories"
     )
 
     object Sources : MainBottomMenuScreen(
-        route= Screens.SOURCES.name,
+        route= ScreenConst.Home.SOURCE,
         icon = Icons.Outlined.Abc,
         title = "Sources"
     )

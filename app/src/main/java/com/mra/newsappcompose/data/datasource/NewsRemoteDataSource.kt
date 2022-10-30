@@ -11,12 +11,34 @@ import java.math.MathContext
  * Create by Mohammadreza Allahgholi
  *  Site: https://seniorandroid.ir
  */
-class NewsRemoteDataSource(private val mContext:Context,private val mApiService : ApiService) : BaseDataSource(mContext){
+class NewsRemoteDataSource(private val mContext: Context, private val mApiService: ApiService) :
+    BaseDataSource(mContext) {
 
-    suspend fun getTeslaNews() = flow {
+    suspend fun getNews(source: String? ) = flow {
         callApi {
-            mApiService.getEverythingOfTesla()
-        }.collect{
+            mApiService.getNews(source)
+        }.collect {
+            emit(it)
+        }
+    }
+
+    suspend fun getNews(category: String?, title: String?) = flow {
+        callApi {
+            mApiService.getNews(
+                category = category,
+                title = title
+            )
+        }.collect {
+            emit(it)
+        }
+    }
+
+    suspend fun getSources(category: String? ) = flow {
+        callApi {
+            mApiService.getSources(
+                category = category
+            )
+        }.collect {
             emit(it)
         }
     }

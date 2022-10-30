@@ -2,21 +2,16 @@ package com.mra.newsappcompose.ui.components
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.*
-import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.tween
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.mra.newsappcompose.features.main.MainBottomMenuScreen
+import com.mra.newsappcompose.ui.main.MainBottomMenuScreen
 import com.mra.newsappcompose.R
 import com.mra.newsappcompose.global.objects.MainBottomBarData
 
@@ -57,7 +52,9 @@ fun BottomMenu(navController: NavController, bottomBarState: Boolean) {
         exit = exitTransition
     ) {
         BottomNavigation(
-            contentColor = colorResource(id = R.color.white)
+            contentColor = colorResource(id = R.color.purple_500),
+            backgroundColor = MaterialTheme.colors.background,
+            elevation = 0.dp
         ) {
             val navBackStackEntry by navController.currentBackStackEntryAsState()
             val currentRoute =
@@ -69,7 +66,7 @@ fun BottomMenu(navController: NavController, bottomBarState: Boolean) {
                         Text(text = it.title)
                     },
                     alwaysShowLabel = false,
-                    selectedContentColor = Color.White,
+                    selectedContentColor = colorResource(id = R.color.purple_500),
                     unselectedContentColor = colorResource(id = R.color.grey_400),
                     selected = currentRoute == it.route,
                     icon = {

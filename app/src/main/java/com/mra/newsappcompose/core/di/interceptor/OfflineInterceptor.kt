@@ -22,7 +22,13 @@ internal class OfflineInterceptor : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         Log.d("TAG", "offline interceptor: called.")
+
         var request: Request = chain.request()
+
+        Log.i(
+            "TAG",
+            "intercept -> ${request.url}"
+        )
 
         // prevent caching when network is on. For that we use the "networkInterceptor"
         if (!GlobalFunction.isNetworkAvailable) {

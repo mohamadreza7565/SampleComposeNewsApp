@@ -1,6 +1,6 @@
 package com.mra.newsappcompose.global.objects
 
-import com.mra.newsappcompose.features.main.MainBottomMenuScreen
+import com.mra.newsappcompose.ui.main.MainBottomMenuScreen
 
 /**
  * Create by Mohammadreza Allahgholi

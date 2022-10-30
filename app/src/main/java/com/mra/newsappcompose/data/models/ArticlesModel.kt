@@ -32,20 +32,10 @@ data class ArticlesModel(
 ):Parcelable
 
 
-val ArticlesPage_UniqueUserNavType: NavType<ArticlesModel> = object : NavType<ArticlesModel>(false) {
-    override val name: String
-        get() = "item"
-
-    override fun get(bundle: Bundle, key: String): ArticlesModel? {
-        return bundle.getParcelable(key)
-    }
-
-
-    override fun parseValue(value: String): ArticlesModel {
-        return Gson().fromJson(value, object : TypeToken<ArticlesModel>() {}.type)
-    }
-
-    override fun put(bundle: Bundle, key: String, value: ArticlesModel) {
-        bundle.putParcelable(key, value)
-    }
-}
+@Parcelize
+data class Source(
+    @SerializedName("id")
+    val id: String?,
+    @SerializedName("name")
+    val name: String?
+): Parcelable

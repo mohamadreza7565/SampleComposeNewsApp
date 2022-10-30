@@ -1,33 +1,36 @@
-package com.mra.newsappcompose.features.main
+package com.mra.newsappcompose.ui.main
 
 import android.annotation.SuppressLint
-import androidx.compose.animation.AnimatedVisibility
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Snackbar
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.google.gson.Gson
 import com.mra.newsappcompose.ui.components.BottomMenu
-import com.mra.newsappcompose.data.enums.Screens
 import com.mra.newsappcompose.data.models.ArticlesModel
-import com.mra.newsappcompose.data.models.ArticlesPage_UniqueUserNavType
+import com.mra.newsappcompose.data.models.Source
 import com.mra.newsappcompose.global.objects.MainBottomBarData
-import com.mra.newsappcompose.global.objects.MockData
-import com.mra.newsappcompose.features.categories.Categories
-import com.mra.newsappcompose.features.newsdetails.DetailsScreen
-import com.mra.newsappcompose.features.newslist.ListNews
-import com.mra.newsappcompose.features.sources.Sources
+import com.mra.newsappcompose.ui.categories.Categories
+import com.mra.newsappcompose.ui.newsdetails.DetailsScreen
+import com.mra.newsappcompose.ui.newslist.ListNews
+import com.mra.newsappcompose.ui.sources.Sources
+import com.mra.newsappcompose.global.ScreenConst
+import com.mra.newsappcompose.ui.components.LoadingScreen
 
 /**
  * Create by Mohammadreza Allahgholi
@@ -35,12 +38,15 @@ import com.mra.newsappcompose.features.sources.Sources
  */
 @Composable
 fun NewsApp() {
+
     val scrollState = rememberScrollState()
     val navController = rememberNavController()
+
     MainScreen(
         navController,
         scrollState
     )
+
 }
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -52,6 +58,7 @@ fun MainScreen(navController: NavHostController, scrollState: ScrollState) {
         navBackStackEntry?.destination?.route ?: MainBottomMenuScreen.NewsList.route
 
     val bottomBarState = MainBottomBarData.menuItems.find { it.route == currentRoute } != null
+    var loadingState by remember { mutableStateOf(false) }
 
     Scaffold(
         bottomBar = {
@@ -61,48 +68,55 @@ fun MainScreen(navController: NavHostController, scrollState: ScrollState) {
             )
         },
     ) { innerPadding ->
+
         Navigation(
             modifier = Modifier.padding(innerPadding),
             navController = navController,
-            scrollState = scrollState
+        ) { mustBeShowLoading ->
+            loadingState = mustBeShowLoading
+        }
+        LoadingScreen(
+            modifier = Modifier.padding(innerPadding),
+            visible = loadingState
         )
+
     }
 }
 
-@Composable
-fun Navigation(modifier: Modifier, navController: NavHostController, scrollState: ScrollState) {
 
-    val lazyListState = rememberLazyListState()
+@Composable
+fun Navigation(
+    modifier: Modifier,
+    navController: NavHostController,
+    mLoadingListener: (Boolean) -> Unit
+) {
+
 
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = Screens.LIST_NEWS.name,
+        startDestination = ScreenConst.Home.NEWS_LIST,
     ) {
 
         bottomNavigation(
-            lazyListState,
-            navController
+            navController,
+            mLoadingListener
         )
-        composable(route = Screens.LIST_NEWS.name) {
-            ListNews(
-                lazyListState = lazyListState,
-                navController = navController
-            )
-        }
 
         composable(
-            route = "${Screens.DETAILS_NEWS.name}?item={item}",
-            arguments = mutableListOf(navArgument("item") { type = ArticlesPage_UniqueUserNavType }),
+            route = ScreenConst.NEWS_DETAILS
         ) { navBackStackEntry ->
 
-           val article = navBackStackEntry.arguments?.getParcelable<ArticlesModel>("item")!!
+            navController.previousBackStackEntry?.savedStateHandle?.get<ArticlesModel>("article")
+                ?.let {
+                    DetailsScreen(
+                        navController = navController,
+                        article = it,
+                        scrollState = rememberScrollState()
+                    )
+                }
 
-            DetailsScreen(
-                navController = navController,
-                article = article,
-                scrollState = rememberScrollState()
-            )
+
         }
 
     }
@@ -110,20 +124,30 @@ fun Navigation(modifier: Modifier, navController: NavHostController, scrollState
 
 
 fun NavGraphBuilder.bottomNavigation(
-    lazyListState: LazyListState,
-    navController: NavHostController
+    navController: NavHostController,
+    mLoadingListener: (Boolean) -> Unit
 ) {
+
+
+
     composable(MainBottomMenuScreen.NewsList.route) {
         ListNews(
             navController = navController,
-            lazyListState = lazyListState
+            lazyListState = rememberLazyListState(),
+            mLoadingListener = mLoadingListener
         )
     }
     composable(MainBottomMenuScreen.Catrgories.route) {
-        Categories(navController = navController)
+        Categories(
+            navController = navController,
+            lazyListState = rememberLazyGridState(),
+            mLoadingListener = mLoadingListener
+        )
     }
     composable(MainBottomMenuScreen.Sources.route) {
-        Sources(navController = navController)
+        Sources(
+            navController = navController
+        )
     }
 }
 
