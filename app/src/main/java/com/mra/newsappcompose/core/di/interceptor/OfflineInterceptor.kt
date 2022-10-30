@@ -1,11 +1,14 @@
 package com.mra.newsappcompose.core.di.interceptor
 
 import android.util.Log
+import com.mra.newsappcompose.BuildConfig
 import com.mra.newsappcompose.global.objects.GlobalFunction
 import okhttp3.CacheControl
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
+import okio.Buffer
+import java.nio.charset.Charset
 import java.util.concurrent.TimeUnit
 
 
@@ -21,14 +24,23 @@ internal class OfflineInterceptor : Interceptor {
     private val HEADER_PRAGMA = "Pragma"
 
     override fun intercept(chain: Interceptor.Chain): Response {
-        Log.d("TAG", "offline interceptor: called.")
+
 
         var request: Request = chain.request()
+        val response = chain.proceed(request)
 
-        Log.i(
-            "TAG",
-            "intercept -> ${request.url}"
-        )
+        if (BuildConfig.DEBUG) {
+            val source = response.body!!.source()
+            source.request(Long.MAX_VALUE) // Buffer the entire body.
+
+            val buffer: Buffer = source.buffer()
+            val responseBodyString: String = buffer.clone().readString(Charset.forName("UTF-8"))
+            Log.i(
+                "TAG",
+                "Http response -> $responseBodyString"
+            )
+        }
+
 
         // prevent caching when network is on. For that we use the "networkInterceptor"
         if (!GlobalFunction.isNetworkAvailable) {
@@ -42,6 +54,6 @@ internal class OfflineInterceptor : Interceptor {
                 .cacheControl(cacheControl)
                 .build()
         }
-        return chain.proceed(request)
+        return response
     }
 }

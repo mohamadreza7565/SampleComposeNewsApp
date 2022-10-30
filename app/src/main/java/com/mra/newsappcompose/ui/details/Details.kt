@@ -1,7 +1,6 @@
-package com.mra.newsappcompose.ui.newsdetails
+package com.mra.newsappcompose.ui.details
 
 import android.annotation.SuppressLint
-import android.os.Bundle
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -26,13 +25,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.google.gson.Gson
 import com.mra.newsappcompose.R
 import com.mra.newsappcompose.data.models.ArticlesModel
-import com.mra.newsappcompose.global.ScreenConst
+import com.mra.newsappcompose.global.objects.ScreenConst
 import com.mra.newsappcompose.global.getDate
 import com.mra.newsappcompose.global.getFullDate
-import kotlinx.coroutines.flow.collect
 
 /**
  * Create by Mohammadreza Allahgholi
@@ -40,13 +37,16 @@ import kotlinx.coroutines.flow.collect
  */
 
 fun NavController.openNewsDetails(article: ArticlesModel) {
-    currentBackStackEntry?.savedStateHandle?.set("article",article)
+    currentBackStackEntry?.savedStateHandle?.set(
+        "article",
+        article
+    )
     navigate(ScreenConst.NEWS_DETAILS)
 }
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun DetailsScreen(navController: NavController, scrollState: ScrollState, article: ArticlesModel) {
+fun Details(navController: NavController, article: ArticlesModel) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -54,7 +54,6 @@ fun DetailsScreen(navController: NavController, scrollState: ScrollState, articl
         },
         content = {
             ColumDetails(
-                scrollState,
                 article
             )
         }
@@ -140,22 +139,21 @@ private fun ToolbarView(navController: NavController) {
 
 @Composable
 private fun ColumDetails(
-    scrollState: ScrollState,
     article: ArticlesModel
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(12.dp)
-            .verticalScroll(scrollState)
+            .verticalScroll(rememberScrollState())
     ) {
 
 
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(250.dp)
-                .padding(8.dp),
+                .padding(8.dp)
+                .defaultMinSize(minHeight = 250.dp),
             shape = RoundedCornerShape(20.dp),
             elevation = 0.dp,
         ) {
@@ -209,7 +207,7 @@ private fun ColumDetails(
         ) {
             InfoWithIcon(
                 R.drawable.ic_source,
-                article.author ?: "author"
+                article.source.name ?: "None source"
             )
             InfoWithIcon(
                 R.drawable.ic_date,

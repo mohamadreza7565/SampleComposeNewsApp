@@ -1,37 +1,33 @@
 package com.mra.newsappcompose.ui.main
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Abc
-import androidx.compose.material.icons.outlined.Category
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.ui.graphics.vector.ImageVector
-import com.mra.newsappcompose.global.ScreenConst
+import com.mra.newsappcompose.R
+import com.mra.newsappcompose.global.objects.ScreenConst
 
 /**
  * Create by Mohammadreza Allahgholi
  *  Site: https://seniorandroid.ir
  */
 sealed class MainBottomMenuScreen(
-    val route:String,
-    val  icon:ImageVector,
-    val title:String
-){
+    val route: String,
+    val icon: Int,
+    val title: String
+) {
 
     object NewsList : MainBottomMenuScreen(
-        route= ScreenConst.Home.NEWS_LIST,
-        icon = Icons.Outlined.Home,
+        route = ScreenConst.Home.NEWS_LIST,
+        icon = R.drawable.ic_home_fill,
         title = "News"
     )
 
-    object Catrgories : MainBottomMenuScreen(
-        route= ScreenConst.Home.CATEGORY,
-        icon = Icons.Outlined.Category,
-        title = "Catrgories"
+    object Search : MainBottomMenuScreen(
+        route = ScreenConst.Home.SEARCH,
+        icon = R.drawable.ic_search_fill,
+        title = "Search"
     )
 
     object Sources : MainBottomMenuScreen(
-        route= ScreenConst.Home.SOURCE,
-        icon = Icons.Outlined.Abc,
+        route = ScreenConst.Home.SOURCE,
+        icon = R.drawable.ic_source_fill,
         title = "Sources"
     )
 }

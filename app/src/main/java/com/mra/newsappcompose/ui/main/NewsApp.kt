@@ -1,21 +1,15 @@
 package com.mra.newsappcompose.ui.main
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.widget.Toast
+import android.app.appsearch.SearchResult
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Snackbar
-import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.navigation.*
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -23,14 +17,14 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.mra.newsappcompose.ui.components.BottomMenu
 import com.mra.newsappcompose.data.models.ArticlesModel
-import com.mra.newsappcompose.data.models.Source
 import com.mra.newsappcompose.global.objects.MainBottomBarData
-import com.mra.newsappcompose.ui.categories.Categories
-import com.mra.newsappcompose.ui.newsdetails.DetailsScreen
-import com.mra.newsappcompose.ui.newslist.ListNews
+import com.mra.newsappcompose.ui.details.Details
+import com.mra.newsappcompose.ui.home.Home
 import com.mra.newsappcompose.ui.sources.Sources
-import com.mra.newsappcompose.global.ScreenConst
+import com.mra.newsappcompose.global.objects.ScreenConst
+import com.mra.newsappcompose.ui.search.Search
 import com.mra.newsappcompose.ui.components.LoadingScreen
+import com.mra.newsappcompose.ui.resultsearch.ResultSearch
 
 /**
  * Create by Mohammadreza Allahgholi
@@ -70,7 +64,6 @@ fun MainScreen(navController: NavHostController, scrollState: ScrollState) {
     ) { innerPadding ->
 
         Navigation(
-            modifier = Modifier.padding(innerPadding),
             navController = navController,
         ) { mustBeShowLoading ->
             loadingState = mustBeShowLoading
@@ -86,14 +79,11 @@ fun MainScreen(navController: NavHostController, scrollState: ScrollState) {
 
 @Composable
 fun Navigation(
-    modifier: Modifier,
     navController: NavHostController,
     mLoadingListener: (Boolean) -> Unit
 ) {
 
-
     NavHost(
-        modifier = modifier,
         navController = navController,
         startDestination = ScreenConst.Home.NEWS_LIST,
     ) {
@@ -103,16 +93,21 @@ fun Navigation(
             mLoadingListener
         )
 
+        resultSearch(
+            navController,
+            mLoadingListener
+        )
+
+
         composable(
             route = ScreenConst.NEWS_DETAILS
         ) { navBackStackEntry ->
 
             navController.previousBackStackEntry?.savedStateHandle?.get<ArticlesModel>("article")
                 ?.let {
-                    DetailsScreen(
+                    Details(
                         navController = navController,
-                        article = it,
-                        scrollState = rememberScrollState()
+                        article = it
                     )
                 }
 
@@ -123,32 +118,62 @@ fun Navigation(
 }
 
 
+fun NavGraphBuilder.resultSearch(
+    navController: NavHostController,
+    mLoadingListener: (Boolean) -> Unit
+) {
+
+    composable(
+        route = ScreenConst.RESULT_SEARCH
+    ) { navBackStackEntry ->
+
+        val query = navController.previousBackStackEntry?.savedStateHandle?.get<String>("query")
+        val category =
+            navController.previousBackStackEntry?.savedStateHandle?.get<String>("category")
+
+        if (query.isNullOrEmpty() && category.isNullOrEmpty()) {
+            return@composable
+        }
+
+        ResultSearch(
+            navController = navController,
+            scrollState = rememberScrollState(),
+            query = query,
+            category = category,
+            mLoadingListener = mLoadingListener
+        )
+
+    }
+
+}
+
 fun NavGraphBuilder.bottomNavigation(
     navController: NavHostController,
     mLoadingListener: (Boolean) -> Unit
 ) {
 
 
-
     composable(MainBottomMenuScreen.NewsList.route) {
-        ListNews(
+        Home(
             navController = navController,
             lazyListState = rememberLazyListState(),
             mLoadingListener = mLoadingListener
         )
     }
-    composable(MainBottomMenuScreen.Catrgories.route) {
-        Categories(
+
+    composable(MainBottomMenuScreen.Search.route) {
+        Search(
             navController = navController,
-            lazyListState = rememberLazyGridState(),
-            mLoadingListener = mLoadingListener
+            mLoadingListener = mLoadingListener,
         )
     }
+
     composable(MainBottomMenuScreen.Sources.route) {
         Sources(
             navController = navController
         )
     }
+
 }
 
 @Preview(showBackground = true)

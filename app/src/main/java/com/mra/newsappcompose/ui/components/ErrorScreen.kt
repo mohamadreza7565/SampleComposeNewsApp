@@ -24,11 +24,11 @@ fun ErrorScreen(visible: Boolean, exception: BaseException, onRetry: (() -> Unit
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = exception.serverMessage ?: "خطا در برقراری ارتباط با سرور")
+            Text(text = exception.serverMessage ?: "Can not connect to server")
             onRetry?.let {
-                Spacer(modifier = Modifier.width(16.dp))
+                Spacer(modifier = Modifier.height(16.dp))
                 Button(onClick = { onRetry() }) {
-                    Text(text = "تلاش مجدد")
+                    Text(text = "Retry")
                 }
             }
         }

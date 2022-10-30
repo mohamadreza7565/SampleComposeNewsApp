@@ -9,14 +9,14 @@ import androidx.compose.ui.res.colorResource
 import com.mra.newsappcompose.R
 
 private val DarkColorPalette = darkColors(
-    primary = Purple200,
+    primary = PRIMARY,
     primaryVariant = Purple700,
     secondary = Teal200
 )
 
 private val LightColorPalette = lightColors(
-    primary = Purple500,
-    primaryVariant = Purple700,
+    primary = PRIMARY,
+    primaryVariant = PRIMARY_VARIANT,
     secondary = Teal200,
     background = BACKGROUND
 

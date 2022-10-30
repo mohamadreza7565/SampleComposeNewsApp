@@ -1,13 +1,13 @@
 package com.mra.newsappcompose.core.di
 
 
-import com.mra.newsappcompose.ui.categories.CategoriesViewModel
-import com.mra.newsappcompose.ui.newslist.NewsListViewModel
+import com.mra.newsappcompose.ui.search.SearchViewModel
+import com.mra.newsappcompose.ui.home.HomeViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val viewModelModule = module {
-    viewModel { NewsListViewModel(get()) }
-    viewModel { CategoriesViewModel(get()) }
+    viewModel { HomeViewModel(get()) }
+    viewModel { SearchViewModel(get()) }
 }
 

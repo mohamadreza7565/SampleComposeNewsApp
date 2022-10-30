@@ -18,37 +18,37 @@ class NewsLocalDataSource(private val mContext: Context) :
     suspend fun getCategories() = flow {
         val categories = arrayListOf(
             CategoryModel(
-                imageUrl = "https://engineerit93.ir/files/news/category/general.jpg",
+                imageUrl = "https://engineerit93.ir/files/news/category/general.png",
                 name = "General",
                 title = "general"
             ),
             CategoryModel(
-                imageUrl = "https://engineerit93.ir/files/news/category/thchnology.webp",
+                imageUrl = "https://engineerit93.ir/files/news/category/thchnology.png",
                 name = "Technology",
                 title = "technology"
             ),
             CategoryModel(
-                imageUrl = "https://engineerit93.ir/files/news/category/business.webp",
+                imageUrl = "https://engineerit93.ir/files/news/category/business.png",
                 name = "Business",
                 title = "business"
             ),
             CategoryModel(
-                imageUrl = "https://engineerit93.ir/files/news/category/entertainment.webp",
+                imageUrl = "https://engineerit93.ir/files/news/category/entertainment.png",
                 name = "Entertainment",
                 title = "entertainment"
             ),
             CategoryModel(
-                imageUrl = "https://engineerit93.ir/files/news/category/health.jpg",
+                imageUrl = "https://engineerit93.ir/files/news/category/health.png",
                 name = "Health",
                 title = "health"
             ),
             CategoryModel(
-                imageUrl = "https://engineerit93.ir/files/news/category/science.webp",
+                imageUrl = "https://engineerit93.ir/files/news/category/science.png",
                 name = "Science",
                 title = "science"
             ),
             CategoryModel(
-                imageUrl = "https://engineerit93.ir/files/news/category/sport.jpg",
+                imageUrl = "https://engineerit93.ir/files/news/category/sport.png",
                 name = "Sports",
                 title = "sports"
             ),

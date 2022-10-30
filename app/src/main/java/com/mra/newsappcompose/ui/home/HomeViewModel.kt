@@ -1,4 +1,4 @@
-package com.mra.newsappcompose.ui.categories
+package com.mra.newsappcompose.ui.home
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -10,27 +10,31 @@ import com.mra.newsappcompose.core.base.BaseViewModel
 import com.mra.newsappcompose.data.models.ArticlesModel
 import com.mra.newsappcompose.data.models.CategoryModel
 import com.mra.newsappcompose.data.repository.NewsRepo
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 /**
  * Create by Mohammadreza Allahgholi
  *  Site: https://seniorandroid.ir
  */
-class CategoriesViewModel(
-    private val mNewsRepo: NewsRepo
-) : BaseViewModel() {
+class HomeViewModel(private val mRepo: NewsRepo) : BaseViewModel() {
 
+    var newses by mutableStateOf<BaseApiDataState<BaseApiResult<MutableList<ArticlesModel>>>>(BaseApiDataState.Loading)
     var categories by mutableStateOf<MutableList<CategoryModel>>(arrayListOf())
 
-    fun getCategories() {
-
+    fun getNews() {
         viewModelScope.launch {
-            mNewsRepo.getCategories().collect {
+            mRepo.getNews().collect{
+                newses = it
+            }
+        }
+    }
+
+    fun getCategory(){
+        viewModelScope.launch {
+            mRepo.getCategories().collect{
                 categories = it
             }
         }
-
     }
 
 }

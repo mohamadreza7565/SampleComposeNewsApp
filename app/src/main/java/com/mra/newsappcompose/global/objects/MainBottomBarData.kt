@@ -10,8 +10,8 @@ object MainBottomBarData {
 
     val menuItems = listOf(
         MainBottomMenuScreen.NewsList,
-        MainBottomMenuScreen.Catrgories,
-        MainBottomMenuScreen.Sources
+        MainBottomMenuScreen.Search,
+        MainBottomMenuScreen.Sources,
     )
 
 }

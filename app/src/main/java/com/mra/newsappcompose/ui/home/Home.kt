@@ -1,10 +1,10 @@
-package com.mra.newsappcompose.ui.newslist
+package com.mra.newsappcompose.ui.home
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -29,10 +29,13 @@ import com.mra.newsappcompose.R
 import com.mra.newsappcompose.core.base.BaseApiDataState
 import com.mra.newsappcompose.core.base.BaseApiResult
 import com.mra.newsappcompose.data.models.ArticlesModel
-import com.mra.newsappcompose.ui.newsdetails.openNewsDetails
+import com.mra.newsappcompose.data.models.CategoryModel
+import com.mra.newsappcompose.ui.details.openNewsDetails
 import com.mra.newsappcompose.global.getDate
 import com.mra.newsappcompose.global.getFullDate
 import com.mra.newsappcompose.ui.components.ErrorScreen
+import com.mra.newsappcompose.ui.resultsearch.openResultSearch
+import com.mra.newsappcompose.ui.theme.GRAY_10
 import org.koin.androidx.compose.getViewModel
 
 /**
@@ -42,21 +45,22 @@ import org.koin.androidx.compose.getViewModel
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun ListNews(
+fun Home(
     lazyListState: LazyListState,
     navController: NavHostController,
-    mViewModel: NewsListViewModel = getViewModel(),
+    mViewModel: HomeViewModel = getViewModel(),
     mLoadingListener: (Boolean) -> Unit
 ) {
 
 
     LaunchedEffect(Unit) {
         mViewModel.getNews()
+        mViewModel.getCategory()
     }
 
-    if (mViewModel.newses is BaseApiDataState.Loading){
+    if (mViewModel.newses is BaseApiDataState.Loading) {
         mLoadingListener.invoke(true)
-    }else{
+    } else {
         mLoadingListener.invoke(false)
     }
     val errorState = mViewModel.newses is BaseApiDataState.Error
@@ -71,8 +75,9 @@ fun ListNews(
                 (mViewModel.newses as BaseApiDataState.Success<BaseApiResult<MutableList<ArticlesModel>>>).data?.articles?.let {
                     NewsList(
                         lazyListState = lazyListState,
-                        data = it,
-                        navController = navController
+                        newses = it,
+                        categories = mViewModel.categories,
+                        navController = navController,
                     )
                 }
 
@@ -135,7 +140,8 @@ private fun ToolbarView() {
 @Composable
 private fun NewsList(
     lazyListState: LazyListState,
-    data: MutableList<ArticlesModel>,
+    newses: MutableList<ArticlesModel>,
+    categories: MutableList<CategoryModel>,
     navController: NavHostController
 ) {
 
@@ -144,7 +150,8 @@ private fun NewsList(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         LazyColumn(
-            state = lazyListState
+            state = lazyListState,
+            contentPadding = PaddingValues(bottom = 150.dp)
         ) {
 
             item {
@@ -163,13 +170,26 @@ private fun NewsList(
                     )
                 )
 
-                BannerView(item = data[9],
+
+                BannerView(item = newses[9],
                     onItemClick = {
                         navController.openNewsDetails(it)
                     })
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                CategoryList(
+                    categories = categories,
+                    onItemClick = {
+                        navController.openResultSearch(category = it.title)
+                    }
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
             }
 
-            items(data) { item ->
+            items(newses) { item ->
                 NewsItems(
                     item = item,
                     onItemClick = {
@@ -181,6 +201,87 @@ private fun NewsList(
 }
 
 @Composable
+fun CategoryList(categories: MutableList<CategoryModel>, onItemClick: (CategoryModel) -> Unit) {
+
+    LazyRow(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center,
+        contentPadding = PaddingValues(20.dp)
+    ) {
+
+        items(categories) { item ->
+            CategoryItem(
+                category = item,
+                onClick = {
+                    onItemClick.invoke(item)
+                })
+        }
+
+    }
+
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun CategoryItem(category: CategoryModel, onClick: (CategoryModel) -> Unit) {
+
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Box(
+            modifier = Modifier
+                .width(90.dp)
+                .height(90.dp),
+            contentAlignment = Alignment.Center
+        ) {
+
+            Card(
+                modifier = Modifier
+                    .height(80.dp)
+                    .width(80.dp)
+                    .clip(CircleShape),
+                elevation = 0.dp,
+                backgroundColor = MaterialTheme.colors.primaryVariant,
+                onClick = {
+                    onClick.invoke(category)
+                }
+            ) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    AsyncImage(
+                        modifier = Modifier
+                            .height(50.dp)
+                            .width(50.dp),
+                        model = category.imageUrl,
+                        contentDescription = null,
+                    )
+                }
+            }
+
+        }
+
+        Spacer(modifier = Modifier.height(5.dp))
+
+        Text(
+            text = category.name,
+            style = TextStyle(
+                fontWeight = FontWeight.Bold,
+                fontSize = 12.sp
+            )
+        )
+
+    }
+
+
+}
+
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
 fun BannerView(item: ArticlesModel, onItemClick: (ArticlesModel) -> Unit) {
 
     Box(
@@ -188,9 +289,6 @@ fun BannerView(item: ArticlesModel, onItemClick: (ArticlesModel) -> Unit) {
             .fillMaxWidth()
             .padding(12.dp)
             .height(340.dp)
-            .clickable {
-                onItemClick.invoke(item)
-            },
     ) {
 
         Card(
@@ -198,7 +296,10 @@ fun BannerView(item: ArticlesModel, onItemClick: (ArticlesModel) -> Unit) {
                 .fillMaxSize(),
             shape = RoundedCornerShape(20.dp),
             elevation = 0.dp,
-            backgroundColor = colorResource(id = R.color.white)
+            backgroundColor = colorResource(id = R.color.white),
+            onClick = {
+                onItemClick.invoke(item)
+            }
         ) {
 
             Column(
@@ -212,6 +313,7 @@ fun BannerView(item: ArticlesModel, onItemClick: (ArticlesModel) -> Unit) {
                         .fillMaxWidth()
                         .height(200.dp),
                     shape = RoundedCornerShape(20.dp),
+                    backgroundColor = GRAY_10,
                     elevation = 0.dp,
                 ) {
 
@@ -220,7 +322,7 @@ fun BannerView(item: ArticlesModel, onItemClick: (ArticlesModel) -> Unit) {
                             .fillMaxSize(),
                         model = item.urlToImage,
                         contentDescription = null,
-                        contentScale = ContentScale.Crop,
+                        contentScale = ContentScale.Crop
                     )
 
                 }
@@ -258,8 +360,8 @@ fun BannerView(item: ArticlesModel, onItemClick: (ArticlesModel) -> Unit) {
 
                         AsyncImage(
                             modifier = Modifier
-                                .height(35.dp)
-                                .width(35.dp),
+                                .height(20.dp)
+                                .width(20.dp),
                             model = R.drawable.ic_source,
                             contentDescription = null,
                             contentScale = ContentScale.Crop,
@@ -268,7 +370,9 @@ fun BannerView(item: ArticlesModel, onItemClick: (ArticlesModel) -> Unit) {
                         Spacer(modifier = Modifier.width(8.dp))
 
                         Text(
-                            text = item.source.name ?: "None author"
+                            text = item.source.name ?: "None source",
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
                         )
 
                     }
@@ -286,16 +390,17 @@ fun BannerView(item: ArticlesModel, onItemClick: (ArticlesModel) -> Unit) {
 
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun NewsItems(item: ArticlesModel, onItemClick: (ArticlesModel) -> Unit) {
 
     Card(
         modifier = Modifier
             .height(150.dp)
-            .padding(10.dp)
-            .clickable {
-                onItemClick.invoke(item)
-            },
+            .padding(10.dp),
+        onClick = {
+            onItemClick.invoke(item)
+        },
         elevation = 0.dp,
         shape = RoundedCornerShape(20.dp),
         backgroundColor = MaterialTheme.colors.background
@@ -306,10 +411,11 @@ fun NewsItems(item: ArticlesModel, onItemClick: (ArticlesModel) -> Unit) {
 
             Card(
                 modifier = Modifier
-                    .height(150.dp)
-                    .width(150.dp),
+                    .height(120.dp)
+                    .width(120.dp),
                 elevation = 0.dp,
-                shape = RoundedCornerShape(20.dp)
+                shape = RoundedCornerShape(20.dp),
+                backgroundColor = GRAY_10
             ) {
                 AsyncImage(
                     modifier = Modifier
@@ -331,7 +437,7 @@ fun NewsItems(item: ArticlesModel, onItemClick: (ArticlesModel) -> Unit) {
             ) {
 
                 Text(
-                    text = item.title ?: "title",
+                    text = item.title ?: "None title",
                     style = TextStyle(
                         fontWeight = FontWeight.Bold,
                         color = Color.Black,
@@ -343,11 +449,7 @@ fun NewsItems(item: ArticlesModel, onItemClick: (ArticlesModel) -> Unit) {
 
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            end = 12.dp,
-                            start = 12.dp
-                        ),
+                        .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -358,18 +460,18 @@ fun NewsItems(item: ArticlesModel, onItemClick: (ArticlesModel) -> Unit) {
 
                         AsyncImage(
                             modifier = Modifier
-                                .height(20.dp)
-                                .width(20.dp),
+                                .height(15.dp)
+                                .width(15.dp),
                             model = R.drawable.ic_source,
                             contentDescription = null,
                             colorFilter = ColorFilter.tint(color = colorResource(id = R.color.grey_600))
                         )
 
-                        Spacer(modifier = Modifier.width(8.dp))
+                        Spacer(modifier = Modifier.width(4.dp))
 
                         Text(
                             text = item.source.name ?: "None source",
-                            style = TextStyle(fontSize = 14.sp)
+                            style = TextStyle(fontSize = 12.sp)
                         )
 
                     }
