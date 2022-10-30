@@ -16,7 +16,7 @@ class NewsRepo(
 
     suspend fun getNews(source: String? = null) = mRemoteDataSource.getNews(source)
 
-    suspend fun getNews(category: String? = null, title: String) = mRemoteDataSource.getNews(
+    suspend fun getNews(category: String? = null, title: String?) = mRemoteDataSource.getNews(
         category = category,
         title = title
     )

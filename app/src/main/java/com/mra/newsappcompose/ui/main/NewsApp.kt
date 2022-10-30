@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.appsearch.SearchResult
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.Scaffold
@@ -83,6 +84,8 @@ fun Navigation(
     mLoadingListener: (Boolean) -> Unit
 ) {
 
+    val resultSearchLazyListState = rememberLazyListState()
+
     NavHost(
         navController = navController,
         startDestination = ScreenConst.Home.NEWS_LIST,
@@ -94,6 +97,7 @@ fun Navigation(
         )
 
         resultSearch(
+            lazyListState = resultSearchLazyListState,
             navController,
             mLoadingListener
         )
@@ -119,6 +123,7 @@ fun Navigation(
 
 
 fun NavGraphBuilder.resultSearch(
+    lazyListState: LazyListState,
     navController: NavHostController,
     mLoadingListener: (Boolean) -> Unit
 ) {
@@ -137,7 +142,7 @@ fun NavGraphBuilder.resultSearch(
 
         ResultSearch(
             navController = navController,
-            scrollState = rememberScrollState(),
+            lazyListState = lazyListState,
             query = query,
             category = category,
             mLoadingListener = mLoadingListener

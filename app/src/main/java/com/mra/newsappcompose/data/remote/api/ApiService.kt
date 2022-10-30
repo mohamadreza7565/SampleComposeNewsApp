@@ -18,7 +18,7 @@ interface ApiService {
         @Query("sources") sources: String?,
     ): Response<BaseApiResult<MutableList<ArticlesModel>>>
 
-    @GET("everything?sortBy=publishedAt&apiKey=07c81529ef0645269b2ad5834abb484e")
+    @GET("top-headlines?sortBy=publishedAt&apiKey=07c81529ef0645269b2ad5834abb484e")
     suspend fun getNews(
         @Query("q") title: String?,
         @Query("category") category: String?,

@@ -11,10 +11,10 @@ import java.util.*
 
 fun String.getDate(): Date {
     return if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.N){
-        SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssxx",
+        SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss",
             Locale.ENGLISH).parse(this)
     }else{
-        java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssxx",
+        java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss",
             Locale.ENGLISH).parse(this)!!
     }
 }

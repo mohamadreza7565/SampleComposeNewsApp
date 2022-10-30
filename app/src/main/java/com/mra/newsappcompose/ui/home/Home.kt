@@ -200,6 +200,108 @@ private fun NewsList(
     }
 }
 
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun NewsItems(item: ArticlesModel, onItemClick: (ArticlesModel) -> Unit) {
+
+    Card(
+        modifier = Modifier
+            .height(150.dp)
+            .padding(10.dp),
+        onClick = {
+            onItemClick.invoke(item)
+        },
+        elevation = 0.dp,
+        shape = RoundedCornerShape(20.dp),
+        backgroundColor = MaterialTheme.colors.background
+    ) {
+        Row(
+            modifier = Modifier.fillMaxSize()
+        ) {
+
+            Card(
+                modifier = Modifier
+                    .height(120.dp)
+                    .width(120.dp),
+                elevation = 0.dp,
+                shape = RoundedCornerShape(20.dp),
+                backgroundColor = GRAY_10
+            ) {
+                AsyncImage(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    model = item.urlToImage,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    placeholder = painterResource(R.drawable.ic_place_holder),
+                    error = painterResource(R.drawable.ic_place_holder)
+                )
+            }
+
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.SpaceBetween
+            ) {
+
+                Text(
+                    text = item.title ?: "None title",
+                    style = TextStyle(
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black,
+                        fontSize = 16.sp
+                    ),
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                )
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+
+                        AsyncImage(
+                            modifier = Modifier
+                                .height(15.dp)
+                                .width(15.dp),
+                            model = R.drawable.ic_source,
+                            contentDescription = null,
+                            colorFilter = ColorFilter.tint(color = colorResource(id = R.color.grey_600))
+                        )
+
+                        Spacer(modifier = Modifier.width(4.dp))
+
+                        Text(
+                            text = item.source.name ?: "None source",
+                            style = TextStyle(fontSize = 12.sp)
+                        )
+
+                    }
+
+                    Text(
+                        text = item.publishedAt?.getDate()?.getFullDate() ?: "None date",
+                        style = TextStyle(fontSize = 10.sp)
+                    )
+
+                }
+
+
+            }
+
+        }
+    }
+
+}
+
 @Composable
 fun CategoryList(categories: MutableList<CategoryModel>, onItemClick: (CategoryModel) -> Unit) {
 
@@ -390,104 +492,4 @@ fun BannerView(item: ArticlesModel, onItemClick: (ArticlesModel) -> Unit) {
 
 }
 
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-fun NewsItems(item: ArticlesModel, onItemClick: (ArticlesModel) -> Unit) {
-
-    Card(
-        modifier = Modifier
-            .height(150.dp)
-            .padding(10.dp),
-        onClick = {
-            onItemClick.invoke(item)
-        },
-        elevation = 0.dp,
-        shape = RoundedCornerShape(20.dp),
-        backgroundColor = MaterialTheme.colors.background
-    ) {
-        Row(
-            modifier = Modifier.fillMaxSize()
-        ) {
-
-            Card(
-                modifier = Modifier
-                    .height(120.dp)
-                    .width(120.dp),
-                elevation = 0.dp,
-                shape = RoundedCornerShape(20.dp),
-                backgroundColor = GRAY_10
-            ) {
-                AsyncImage(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    model = item.urlToImage,
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    placeholder = painterResource(R.drawable.ic_place_holder),
-                    error = painterResource(R.drawable.ic_place_holder)
-                )
-            }
-
-
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.SpaceBetween
-            ) {
-
-                Text(
-                    text = item.title ?: "None title",
-                    style = TextStyle(
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black,
-                        fontSize = 16.sp
-                    ),
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                )
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-
-                        AsyncImage(
-                            modifier = Modifier
-                                .height(15.dp)
-                                .width(15.dp),
-                            model = R.drawable.ic_source,
-                            contentDescription = null,
-                            colorFilter = ColorFilter.tint(color = colorResource(id = R.color.grey_600))
-                        )
-
-                        Spacer(modifier = Modifier.width(4.dp))
-
-                        Text(
-                            text = item.source.name ?: "None source",
-                            style = TextStyle(fontSize = 12.sp)
-                        )
-
-                    }
-
-                    Text(
-                        text = item.publishedAt?.getDate()?.getFullDate() ?: "None date",
-                        style = TextStyle(fontSize = 10.sp)
-                    )
-
-                }
-
-
-            }
-
-        }
-    }
-
-}
 

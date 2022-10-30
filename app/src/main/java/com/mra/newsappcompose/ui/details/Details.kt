@@ -122,7 +122,9 @@ private fun ToolbarView(navController: NavController) {
                         .width(36.dp)
                         .clip(CircleShape),
                     onClick = {
-                        navController.popBackStack()
+
+
+
                     })
                 {
                     Icon(
