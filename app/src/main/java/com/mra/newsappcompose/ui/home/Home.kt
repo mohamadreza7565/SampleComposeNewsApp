@@ -462,24 +462,28 @@ fun BannerView(item: ArticlesModel, onItemClick: (ArticlesModel) -> Unit) {
 
                         AsyncImage(
                             modifier = Modifier
-                                .height(20.dp)
-                                .width(20.dp),
+                                .height(15.dp)
+                                .width(15.dp),
                             model = R.drawable.ic_source,
                             contentDescription = null,
                             contentScale = ContentScale.Crop,
                         )
 
-                        Spacer(modifier = Modifier.width(8.dp))
+                        Spacer(modifier = Modifier.width(6.dp))
 
                         Text(
                             text = item.source.name ?: "None source",
                             maxLines = 1,
+                            style = TextStyle(fontSize = 14.sp),
                             overflow = TextOverflow.Ellipsis
                         )
 
                     }
 
-                    Text(text = item.publishedAt?.getDate()?.getFullDate() ?: "None date")
+                    Text(
+                        style = TextStyle(fontSize = 12.sp),
+                        text = item.publishedAt?.getDate()?.getFullDate() ?: "None date"
+                    )
 
                 }
 

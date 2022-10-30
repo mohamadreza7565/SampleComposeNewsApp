@@ -8,7 +8,7 @@ object ScreenConst {
 
     object Home{
         const val NEWS_LIST = "NEWS_LIST"
-        const val SOURCE = "SOURCE"
+        const val PROFILE = "PROFILE"
         const val SEARCH = "SEARCH"
     }
 

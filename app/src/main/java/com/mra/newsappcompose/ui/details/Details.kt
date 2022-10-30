@@ -30,6 +30,7 @@ import com.mra.newsappcompose.data.models.ArticlesModel
 import com.mra.newsappcompose.global.objects.ScreenConst
 import com.mra.newsappcompose.global.getDate
 import com.mra.newsappcompose.global.getFullDate
+import com.mra.newsappcompose.global.objects.GlobalFunction
 
 /**
  * Create by Mohammadreza Allahgholi
@@ -50,7 +51,10 @@ fun Details(navController: NavController, article: ArticlesModel) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            ToolbarView(navController)
+            ToolbarView(
+                article,
+                navController
+            )
         },
         content = {
             ColumDetails(
@@ -61,7 +65,7 @@ fun Details(navController: NavController, article: ArticlesModel) {
 }
 
 @Composable
-private fun ToolbarView(navController: NavController) {
+private fun ToolbarView(article: ArticlesModel, navController: NavController) {
     TopAppBar(
         modifier = Modifier
             .fillMaxWidth()
@@ -122,9 +126,10 @@ private fun ToolbarView(navController: NavController) {
                         .width(36.dp)
                         .clip(CircleShape),
                     onClick = {
-
-
-
+                        var content = article.title
+                        content += "\n\n"
+                        content += article.url
+                        GlobalFunction.shareText(content)
                     })
                 {
                     Icon(

@@ -26,8 +26,8 @@ sealed class MainBottomMenuScreen(
     )
 
     object Sources : MainBottomMenuScreen(
-        route = ScreenConst.Home.SOURCE,
-        icon = R.drawable.ic_source_fill,
-        title = "Sources"
+        route = ScreenConst.Home.PROFILE,
+        icon = R.drawable.ic_profile_fill,
+        title = "Profile"
     )
 }

@@ -1,7 +1,6 @@
 package com.mra.newsappcompose.ui.main
 
 import android.annotation.SuppressLint
-import android.app.appsearch.SearchResult
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
@@ -21,7 +20,7 @@ import com.mra.newsappcompose.data.models.ArticlesModel
 import com.mra.newsappcompose.global.objects.MainBottomBarData
 import com.mra.newsappcompose.ui.details.Details
 import com.mra.newsappcompose.ui.home.Home
-import com.mra.newsappcompose.ui.sources.Sources
+import com.mra.newsappcompose.ui.profile.Sources
 import com.mra.newsappcompose.global.objects.ScreenConst
 import com.mra.newsappcompose.ui.search.Search
 import com.mra.newsappcompose.ui.components.LoadingScreen
