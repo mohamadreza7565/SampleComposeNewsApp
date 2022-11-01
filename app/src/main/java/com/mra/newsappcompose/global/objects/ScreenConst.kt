@@ -6,8 +6,8 @@ package com.mra.newsappcompose.global.objects
  */
 object ScreenConst {
 
-    object Home{
-        const val NEWS_LIST = "NEWS_LIST"
+    object Main{
+        const val Home = "Home"
         const val PROFILE = "PROFILE"
         const val SEARCH = "SEARCH"
     }

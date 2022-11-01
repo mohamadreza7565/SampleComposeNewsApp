@@ -14,19 +14,19 @@ sealed class MainBottomMenuScreen(
 ) {
 
     object NewsList : MainBottomMenuScreen(
-        route = ScreenConst.Home.NEWS_LIST,
+        route = ScreenConst.Main.Home,
         icon = R.drawable.ic_home_fill,
         title = "News"
     )
 
     object Search : MainBottomMenuScreen(
-        route = ScreenConst.Home.SEARCH,
+        route = ScreenConst.Main.SEARCH,
         icon = R.drawable.ic_search_fill,
         title = "Search"
     )
 
     object Sources : MainBottomMenuScreen(
-        route = ScreenConst.Home.PROFILE,
+        route = ScreenConst.Main.PROFILE,
         icon = R.drawable.ic_profile_fill,
         title = "Profile"
     )

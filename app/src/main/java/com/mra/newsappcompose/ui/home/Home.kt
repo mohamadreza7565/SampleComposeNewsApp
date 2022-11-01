@@ -154,7 +154,7 @@ private fun NewsList(
             contentPadding = PaddingValues(bottom = 150.dp)
         ) {
 
-            item {
+            item(key = -1) {
 
                 ToolbarView()
 
@@ -189,7 +189,10 @@ private fun NewsList(
 
             }
 
-            items(newses) { item ->
+            items(items = newses,
+                key = {
+                    newses.indexOf(it)
+                }) { item ->
                 NewsItems(
                     item = item,
                     onItemClick = {

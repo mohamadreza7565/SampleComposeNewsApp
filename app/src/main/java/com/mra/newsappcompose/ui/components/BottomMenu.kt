@@ -143,9 +143,11 @@ fun AddItem(
         elevation = 0.dp,
         shape = RoundedCornerShape(12.dp),
         onClick = {
-            navController.navigate(screen.route) {
-                popUpTo(navController.graph.findStartDestination().id)
-                launchSingleTop = true
+            if (!selected){
+                navController.navigate(screen.route) {
+                    popUpTo(navController.graph.findStartDestination().id)
+                    launchSingleTop = true
+                }
             }
         }
     ) {

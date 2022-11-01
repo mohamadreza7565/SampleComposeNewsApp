@@ -53,6 +53,7 @@ fun MainScreen(navController: NavHostController, scrollState: ScrollState) {
 
     val bottomBarState = MainBottomBarData.menuItems.find { it.route == currentRoute } != null
     var loadingState by remember { mutableStateOf(false) }
+    var routeState by remember { mutableStateOf(ScreenConst.Main.Home) }
 
     Scaffold(
         bottomBar = {
@@ -66,9 +67,12 @@ fun MainScreen(navController: NavHostController, scrollState: ScrollState) {
         Navigation(
             navController = navController,
         ) { mustBeShowLoading ->
+            routeState = navController.currentDestination?.route!!
             loadingState = mustBeShowLoading
         }
         LoadingScreen(
+            navController = navController,
+            route = routeState,
             modifier = Modifier.padding(innerPadding),
             visible = loadingState
         )
@@ -87,7 +91,7 @@ fun Navigation(
 
     NavHost(
         navController = navController,
-        startDestination = ScreenConst.Home.NEWS_LIST,
+        startDestination = ScreenConst.Main.Home,
     ) {
 
         bottomNavigation(
