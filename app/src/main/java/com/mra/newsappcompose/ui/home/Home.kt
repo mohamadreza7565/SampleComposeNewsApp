@@ -197,7 +197,8 @@ private fun NewsList(
                     item = item,
                     onItemClick = {
                         navController.openNewsDetails(it)
-                    })
+                    }
+                )
             }
         }
     }
